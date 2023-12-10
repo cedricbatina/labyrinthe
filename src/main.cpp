@@ -10,11 +10,12 @@ char **Matrice;           // Matrice contenant le niveau
 
 void LabyAffichage();
 void LabyRedim(int x, int y);
-void OuvrirNiveau(char *nom_fichier);
+void OuvrirNiveau(const char *nom_fichier);
 void LibereMemoire();
-
+void DessinerNiveau();
 int main(int argc, char const *argv[])
 {
+ glutInit(&argc, const_cast<char **>(argv));
  NbColonnes = NbLignes = 0; // initialise la taille
  glutInitWindowPosition(10, 10);
  glutInitWindowSize(500, 500);
@@ -22,7 +23,8 @@ int main(int argc, char const *argv[])
  glutCreateWindow("Labyrinthe");
  glutDisplayFunc(LabyAffichage);
  glutReshapeFunc(LabyRedim);
- OuvrirNiveau("niveaux.text");
+ OuvrirNiveau("niveaux.txt");
+
  glutMainLoop();
  return 0;
 }
@@ -34,8 +36,8 @@ void LabyAffichage()
  glClear(GL_COLOR_BUFFER_BIT); // efface l'ecran
  glMatrixMode(GL_MODELVIEW);
  /*les instructions d'affichage ci-dessous*/
-
- glFlush(); // acheve l'affichage
+ DessinerNiveau(); //  affiche le niveau
+ glFlush();        // acheve l'affichage
 }
 void LabyRedim(int x, int y)
 {
@@ -44,7 +46,7 @@ void LabyRedim(int x, int y)
  glLoadIdentity();
  gluOrtho2D(0.0, (double)NbColonnes, (double)NbLignes, 0.0);
 }
-void OuvrirNiveau(char *nom_fichier)
+void OuvrirNiveau(const char *nom_fichier)
 {
  /**/
  ifstream fichier;
@@ -90,4 +92,25 @@ void LibereMemoire()
    delete[] Matrice[i]; // libere la mémoire des colonnes
   delete[] Matrice;
  }
+}
+void DessinerNiveau()
+{
+ glColor3b(0.5, 0.5, 0.5); // couleur grise
+ // commence l'affichage de quadrilatères
+ glBegin(GL_QUADS);
+ // parcourt toures les cellules de la matrice
+ for (int i = 0; i < NbColonnes; i++)
+  for (int j = 0; j < NbLignes; j++)
+  {
+   // si c'est un mur , on dessine un carré
+   if (Matrice[i][j] == '0')
+   {
+    // place les points du carré
+    glVertex2d(i, j);
+    glVertex2d(i, j + 1);
+    glVertex2d(i + 1, j + 1);
+    glVertex2d(i + 1, j);
+   }
+  }
+ glEnd();
 }
