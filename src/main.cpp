@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include "GL/freeglut.h"
+#include "./entete/Joueur.h"
 
 using namespace std;
 
@@ -13,6 +14,8 @@ void LabyRedim(int x, int y);
 void OuvrirNiveau(const char *nom_fichier);
 void LibereMemoire();
 void DessinerNiveau();
+Joueur monJoueur; // declaration d'un  type joueur
+
 int main(int argc, char const *argv[])
 {
  glutInit(&argc, const_cast<char **>(argv));
