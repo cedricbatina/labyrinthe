@@ -1,12 +1,12 @@
 #include <fstream>
 #include <iostream>
-#include "GL/freeglut.h"
-#include "./entete/Joueur.h"
+#include "../entete/Joueur.h"
 
 using namespace std;
 
 int NbColonnes, NbLignes; // taille du niveau
-char **Matrice;           // Matrice contenant le niveau
+char **Matrice;           // Matrice contenant le niveaucls
+
 // Matrice = NULL;
 
 void LabyAffichage();
@@ -14,6 +14,7 @@ void LabyRedim(int x, int y);
 void OuvrirNiveau(const char *nom_fichier);
 void LibereMemoire();
 void DessinerNiveau();
+void Dessiner();
 Joueur monJoueur; // declaration d'un  type joueur
 
 int main(int argc, char const *argv[])
@@ -29,6 +30,8 @@ int main(int argc, char const *argv[])
  OuvrirNiveau("niveaux.txt");
 
  glutMainLoop();
+ cout << "Coordonnées du joueur (" << monJoueur.getPosC() << ", " << monJoueur.getPosL() << ") " << endl;
+
  return 0;
 }
 
@@ -39,8 +42,9 @@ void LabyAffichage()
  glClear(GL_COLOR_BUFFER_BIT); // efface l'ecran
  glMatrixMode(GL_MODELVIEW);
  /*les instructions d'affichage ci-dessous*/
- DessinerNiveau(); //  affiche le niveau
- glFlush();        // acheve l'affichage
+ DessinerNiveau();     //  affiche le niveau
+ monJoueur.Dessiner(); // affiche l'avatar du joueur
+ glFlush();            // acheve l'affichage
 }
 void LabyRedim(int x, int y)
 {
@@ -73,9 +77,19 @@ void OuvrirNiveau(const char *nom_fichier)
  {
   for (int j = 0; j < NbLignes; j++)
   {
-   Matrice[i][j] = '0';
+   fichier >> Matrice[i][j];
+   switch (Matrice[i][j])
+   {
+   // position initiale du joueur
+   case 'j': // teste à la fois le j minuscule
+   case 'J': // et le J majuscule
+    monJoueur.setPosC(i);
+    monJoueur.setPosL(j);
+    break;
+   }
   }
  }
+
  // lecture du tableau du niveau, caractère par caractère
  for (int j = 0; j < NbLignes; j++)
  {
