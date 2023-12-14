@@ -4,10 +4,11 @@
 
 using namespace std;
 
-int NbColonnes, NbLignes; // taille du niveau
-extern char **Matrice;    // Matrice contenant le niveaucls
-
-// Matrice = NULL;
+int NbColonnes;
+int NbLignes;          // taille du niveau
+char **Matrice = NULL; // Matrice contenant le niveaucls
+int SortieC = 0;
+int SortieL = 0;
 
 void LabyAffichage();
 void LabyRedim(int x, int y);
@@ -15,6 +16,9 @@ void OuvrirNiveau(const char *nom_fichier);
 void LibereMemoire();
 void DessinerNiveau();
 void Dessiner();
+void TestVictoire();
+void LabyClavierSpecial(int key, int x, int y);
+
 Joueur monJoueur; // declaration d'un  type joueur
 
 int main(int argc, char const *argv[])
@@ -28,7 +32,6 @@ int main(int argc, char const *argv[])
  glutDisplayFunc(LabyAffichage);
  glutReshapeFunc(LabyRedim);
  glutSpecialFunc(LabyClavierSpecial);
- void LabyClavierSpecial(int key, int x, int y);
  OuvrirNiveau("niveaux.txt");
 
  glutMainLoop();
@@ -88,18 +91,26 @@ void OuvrirNiveau(const char *nom_fichier)
     monJoueur.setPosC(i);
     monJoueur.setPosL(j);
     break;
+   // sortie de jeu
+   case 's': // teste  à la fois la minuscule
+   case 'S':
+   {
+    SortieC = i;
+    SortieL = j;
+    break;
+   }
    }
   }
  }
 
  // lecture du tableau du niveau, caractère par caractère
- for (int j = 0; j < NbLignes; j++)
+ /*for (int j = 0; j < NbLignes; j++)
  {
   for (int i = 0; i < NbColonnes; i++)
   {
    fichier >> Matrice[i][j];
   }
- }
+ }*/
  fichier.close(); // fermeture du fichier
 }
 void LibereMemoire()
@@ -112,6 +123,20 @@ void LibereMemoire()
   delete[] Matrice;
  }
 }
+
+void TestVictoire()
+{
+ // comparaison de la position du joueur avec le point de sortie
+ if (monJoueur.getPosC() == SortieC && monJoueur.getPosL() == SortieL)
+ {
+  cout << "Vous avez gagne ! " << endl;
+  LabyAffichage(); // rafraichit la scène
+  LibereMemoire(); // libère la mémoire allouée
+  system("pause");
+  exit(1);
+ }
+}
+
 void DessinerNiveau()
 {
  glColor3b(0.5, 0.5, 0.5); // couleur grise
@@ -119,6 +144,7 @@ void DessinerNiveau()
  glBegin(GL_QUADS);
  // parcourt toures les cellules de la matrice
  for (int i = 0; i < NbColonnes; i++)
+ {
   for (int j = 0; j < NbLignes; j++)
   {
    // si c'est un mur , on dessine un carré
@@ -131,7 +157,17 @@ void DessinerNiveau()
     glVertex2d(i + 1, j);
    }
   }
+ }
  glEnd();
+ // affichage du point de sortie en vert
+ glPushMatrix();
+ // se positionnner au point de sortie
+ glTranslated(SortieC + 0.5, SortieL + 0.5, 0.0);
+ glColor3d(0.3, 1.0, 0.3); // couleur verte
+ // dessine un carré de taille "taille"
+ for (double taille = 0.1; taille < 1.0; taille += .02)
+  glutWireCube(taille);
+ glPopMatrix();
 }
 void LabyClavierSpecial(int key, int x, int y)
 {
@@ -157,5 +193,6 @@ void LabyClavierSpecial(int key, int x, int y)
  default:
   break;
  }
- glutPostRedisplay(); // ordonne le rafraichissement
+ TestVictoire();      // le joueur à peut être gagné
+ glutPostRedisplay(); // ordonne le rafraichissement de l'affichage
 }

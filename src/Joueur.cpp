@@ -1,5 +1,9 @@
 #include "../entete/Joueur.h"
 
+extern int NbColonnes;
+extern int NbLignes;
+extern char **Matrice;
+
 void Joueur::Dessiner(/* args */)
 {
   glPushMatrix();
@@ -14,7 +18,8 @@ void Joueur::Dessiner(/* args */)
 }
 void Joueur::BougerEnHaut()
 {
-  if (PosL > 0 && Matrice[PosC][PosL - 1] != '0')
+
+  if ((PosL > 0) && (Matrice[PosC][PosL - 1] != '0'))
     PosL--;
 }
 void Joueur::BougerEnBas()
