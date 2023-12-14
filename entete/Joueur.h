@@ -1,31 +1,52 @@
-#include "GL/freeglut.h"
+#include <iostream>
+#include "../GL/freeglut.h"
 
 class Joueur
 {
+
 private:
  /* data */
  // position Colonne/Ligne sur la matrice
- int PosC, PosL;
+ extern int PosC;
+ extern int PosL;
 
 public:
+ Joueur(/* args */);
+ ~Joueur();
  // accesseurs
- int getPosC()
+ int getPosC() const
  {
-  const { return PosC; }
+  {
+   return PosC;
+  }
  }
- int getPosL()
+ int getPosL() const
  {
-  const { return PosL; }
+  {
+   return PosL;
+  }
  }
+ // les mutateurs
+ void setPosC(int C)
+ {
+  PosC = C;
+ }
+ void setPosL(int L)
+ {
+  PosL = L;
+ }
+ void Dessiner();
+ void BougerEnHaut();
+ void BougerEnBas();
+ void BougerAGauche();
+ void BougerADroite();
 
  // on initialise
  /*void Initialisation () {
   PosC = PosL = 0;
  }*/
- // Constructeur
- Jouer()
+ /*Joueur()
  {
-  Posc = PosL + 0;
- }
+  PosC = PosL + 0;
+ }*/
 };
-cout << "Coordonnées du joueur (" << monJoueur.getPosC() << ", " << monJoueur.getPosL() << ") " << endl;

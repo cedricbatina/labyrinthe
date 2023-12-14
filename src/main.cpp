@@ -5,7 +5,7 @@
 using namespace std;
 
 int NbColonnes, NbLignes; // taille du niveau
-char **Matrice;           // Matrice contenant le niveaucls
+extern char **Matrice;    // Matrice contenant le niveaucls
 
 // Matrice = NULL;
 
@@ -23,10 +23,12 @@ int main(int argc, char const *argv[])
  NbColonnes = NbLignes = 0; // initialise la taille
  glutInitWindowPosition(10, 10);
  glutInitWindowSize(500, 500);
- glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE);
+ glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
  glutCreateWindow("Labyrinthe");
  glutDisplayFunc(LabyAffichage);
  glutReshapeFunc(LabyRedim);
+ glutSpecialFunc(LabyClavierSpecial);
+ void LabyClavierSpecial(int key, int x, int y);
  OuvrirNiveau("niveaux.txt");
 
  glutMainLoop();
@@ -44,7 +46,7 @@ void LabyAffichage()
  /*les instructions d'affichage ci-dessous*/
  DessinerNiveau();     //  affiche le niveau
  monJoueur.Dessiner(); // affiche l'avatar du joueur
- glFlush();            // acheve l'affichage
+ glutSwapBuffers();    // acheve l'affichage et inverse les 2 tampons
 }
 void LabyRedim(int x, int y)
 {
@@ -73,9 +75,9 @@ void OuvrirNiveau(const char *nom_fichier)
   Matrice[i] = new char[NbLignes];
  }
  // initialisation des valeurs du tableau
- for (int i = 0; i < NbColonnes; i++)
+ for (int j = 0; j < NbLignes; j++)
  {
-  for (int j = 0; j < NbLignes; j++)
+  for (int i = 0; i < NbColonnes; i++)
   {
    fichier >> Matrice[i][j];
    switch (Matrice[i][j])
@@ -130,4 +132,30 @@ void DessinerNiveau()
    }
   }
  glEnd();
+}
+void LabyClavierSpecial(int key, int x, int y)
+{
+ /*Appelée lors de l'appui sur une touche spéciale clavier*/
+ switch (key)
+ {
+ case /* constant-expression */ GLUT_KEY_UP:
+  /* deplace le joueur vers le haut */
+  monJoueur.BougerEnHaut();
+
+  break;
+ case GLUT_KEY_DOWN: /*deplace le joueur vers le bas*/
+  monJoueur.BougerEnBas();
+  break;
+ case GLUT_KEY_LEFT: /*deplace le joueur vers la gauche*/
+  monJoueur.BougerAGauche();
+  break;
+
+ case GLUT_KEY_RIGHT: /* deplace le joueur vers la droite*/
+  monJoueur.BougerADroite();
+  break;
+
+ default:
+  break;
+ }
+ glutPostRedisplay(); // ordonne le rafraichissement
 }
