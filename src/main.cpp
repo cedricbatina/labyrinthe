@@ -5,7 +5,7 @@
 #include "../entete/EnnemiVert.h"
 
 using namespace std;
-const int TIMER_MILLIS = 500;
+const int TIMER_MILLIS = 1500;
 int NbColonnes;
 int NbLignes;          // taille du niveau
 char **Matrice = NULL; // Matrice contenant le niveaucls
@@ -202,12 +202,14 @@ void LabyClavierSpecial(int key, int x, int y)
  default:
   break;
  }
- TestVictoire();      // le joueur à peut être gagné
- glutPostRedisplay(); // ordonne le rafraichissement de l'affichage
+ TestVictoire();                // le joueur à peut être gagné
+ monEnnemiVert.TestCollision(); // le joueur a peu être été mangé
+ glutPostRedisplay();           // ordonne le rafraichissement de l'affichage
 }
 void LabyTimer(int value)
 {
- //
+ // le joueur a peut être été mangé
+ monEnnemiVert.TestCollision();
  // deplacement automatique de l'ennemi vert
  monEnnemiVert.DeplacementAuto();
  // ordre de rafraichissement de l'affichage

@@ -1,4 +1,9 @@
 #include "../entete/EnnemiBase.h"
+#include "../entete/Joueur.h"
+extern void LibereMemoire();
+extern void LabyAffichage();
+
+extern Joueur monJoueur;
 
 void EnnemiBase ::DeplacementAuto()
 {
@@ -25,5 +30,18 @@ void EnnemiBase ::DeplacementAuto()
   BougerAGauche();
   break;
  }
+ }
+}
+void EnnemiBase ::TestCollision()
+{
+ // test si le joueur et l'ennemi sont au même endroit
+
+ if (PosC == monJoueur.getPosC() && PosL == monJoueur.getPosL())
+ {
+  cout << "Vous avez perdu ! \a" << endl;
+  LabyAffichage(); // rafraîssement de la scène
+  LibereMemoire(); // libere la mémoire allouée
+  system("pause");
+  exit(0);
  }
 }
