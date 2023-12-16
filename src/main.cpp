@@ -1,9 +1,11 @@
 #include <fstream>
 #include <iostream>
+#include <time.h>
 #include "../entete/Joueur.h"
+#include "../entete/EnnemiVert.h"
 
 using namespace std;
-
+const int TIMER_MILLIS = 500;
 int NbColonnes;
 int NbLignes;          // taille du niveau
 char **Matrice = NULL; // Matrice contenant le niveaucls
@@ -18,13 +20,16 @@ void DessinerNiveau();
 void Dessiner();
 void TestVictoire();
 void LabyClavierSpecial(int key, int x, int y);
+void LabyTimer(int value);
 
-Joueur monJoueur; // declaration d'un  type joueur
+Joueur monJoueur;         // declaration d'un  type joueur
+EnnemiVert monEnnemiVert; // ennemi vert
 
 int main(int argc, char const *argv[])
 {
  glutInit(&argc, const_cast<char **>(argv));
  NbColonnes = NbLignes = 0; // initialise la taille
+ srand((int)time(NULL));
  glutInitWindowPosition(10, 10);
  glutInitWindowSize(500, 500);
  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
@@ -45,11 +50,15 @@ void LabyAffichage()
  // definit le background color
  glClearColor(1.0, 1.0, 1.0, 1.0);
  glClear(GL_COLOR_BUFFER_BIT); // efface l'ecran
+ // définit la matrice de modelisation active
  glMatrixMode(GL_MODELVIEW);
  /*les instructions d'affichage ci-dessous*/
- DessinerNiveau();     //  affiche le niveau
- monJoueur.Dessiner(); // affiche l'avatar du joueur
- glutSwapBuffers();    // acheve l'affichage et inverse les 2 tampons
+ DessinerNiveau();                          //  affiche le niveau
+ monJoueur.Dessiner();                      // affiche l'avatar du joueur
+ monEnnemiVert.Dessiner();                  // dessine l'ennemi vert
+ glutTimerFunc(TIMER_MILLIS, LabyTimer, 0); // Add this line to start the enemy movement
+
+ glutSwapBuffers(); // acheve l'affichage et inverse les 2 tampons
 }
 void LabyRedim(int x, int y)
 {
@@ -88,8 +97,8 @@ void OuvrirNiveau(const char *nom_fichier)
    // position initiale du joueur
    case 'j': // teste à la fois le j minuscule
    case 'J': // et le J majuscule
-    monJoueur.setPosC(i);
-    monJoueur.setPosL(j);
+    monJoueur.SetPosC(i);
+    monJoueur.SetPosL(j);
     break;
    // sortie de jeu
    case 's': // teste  à la fois la minuscule
@@ -195,4 +204,14 @@ void LabyClavierSpecial(int key, int x, int y)
  }
  TestVictoire();      // le joueur à peut être gagné
  glutPostRedisplay(); // ordonne le rafraichissement de l'affichage
+}
+void LabyTimer(int value)
+{
+ //
+ // deplacement automatique de l'ennemi vert
+ monEnnemiVert.DeplacementAuto();
+ // ordre de rafraichissement de l'affichage
+ glutPostRedisplay();
+ /*pour que la fonction Timer soit répétée*/
+ glutTimerFunc(TIMER_MILLIS, LabyTimer, 0);
 }

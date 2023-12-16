@@ -1,8 +1,8 @@
 #include "../entete/Joueur.h"
 
-extern int NbColonnes;
+/*extern int NbColonnes;
 extern int NbLignes;
-extern char **Matrice;
+extern char **Matrice;*/
 
 void Joueur::Dessiner(/* args */)
 {
@@ -16,6 +16,7 @@ void Joueur::Dessiner(/* args */)
   glutSolidSphere(0.05, 12, 12); // deuxieme oeil
   glPopMatrix();
 }
+/*
 void Joueur::BougerEnHaut()
 {
 
@@ -39,12 +40,4 @@ void Joueur::BougerADroite()
   if (PosC < NbColonnes - 1 && Matrice[PosC][PosL] != '0')
     PosC++;
 }
-
-Joueur::Joueur()
-{
-  /*code goes below*/
-}
-Joueur::~Joueur()
-{
-  /* code goes below*/
-}
+*/
