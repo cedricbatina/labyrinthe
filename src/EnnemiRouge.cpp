@@ -23,3 +23,11 @@ void EnnemiRouge::Dessiner()
  glutSolidSphere(0.07, 12, 12); // deuxième oeil
  glPopMatrix();
 }
+
+void EnnemiRouge ::DeplacementAuto()
+{
+ // probabilité de duplication de l'ennemi rouge
+ if (rand() % 500 == 0)
+  AjouterEnnemi(ENNEMI_ROUGE, PosC, PosL);
+ EnnemiBase ::DeplacementAuto(); // appel du déplacement de la classe mère
+}

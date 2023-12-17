@@ -5,13 +5,9 @@
 #include "../entete/EnnemiBase.h"
 #include "../entete/EnnemiVert.h"
 #include "../entete/EnnemiRouge.h"
-
+#include "../entete/TypeEnnemi.h"
 using namespace std;
-enum TYPE_ENNEMI
-{
-    ENNEMI_VERT,
-    ENNEMI_ROUGE
-};
+
 const int TIMER_MILLIS = 1500;
 
 int NbColonnes;
@@ -32,7 +28,6 @@ void Dessiner();
 void TestVictoire();
 void LabyClavierSpecial(int key, int x, int y);
 void LabyTimer(int value);
-void AjouterEnnemi(TYPE_ENNEMI type, int Colonne, int Ligne);
 
 int main(int argc, char const *argv[])
 {
